@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(BROWSER=none npm start)",
+      "Read(//tmp/**)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm start *)",
+      "Bash(curl -s http://localhost:3000)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(timeout 30 npm run build)",
+      "Bash(npm run *)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(npm install *)",
+      "Bash(node -e \"require\\('leaflet'\\); require\\('react-leaflet'\\); console.log\\('OK'\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/react-leaflet/package.json'\\).version\\)\")"
+    ]
+  }
+}

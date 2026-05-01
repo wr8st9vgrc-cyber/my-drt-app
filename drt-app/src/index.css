@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #b8ecd8;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#root {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  background: #C2F2E4;
+  position: relative;
+  overflow: hidden; /* 슬라이드 트랜지션 클리핑 */
+}
+
+/* ── 화면 전환 슬라이드 업 애니메이션 ── */
+@keyframes screenSlideUp {
+  from {
+    transform: translateY(48px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.screen-enter {
+  animation: screenSlideUp 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+  min-height: 100vh;
+}
