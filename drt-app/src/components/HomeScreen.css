@@ -94,7 +94,7 @@
 
 .dest-item:last-child { border-bottom: none; }
 
-.dest-item.selected { background: #edfaf6; }
+.dest-item.selected { background: transparent; }
 
 .dest-item:active { background: #f5fcfa; }
 

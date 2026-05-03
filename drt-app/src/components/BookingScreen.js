@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { YEONGJU_STOPS, DEPARTURE_COORDS } from '../data/yeongju';
-import { makeMarkerHtml } from './Icon';
+import { makeMarkerHtml, Icon } from './Icon';
 import './BookingScreen.css';
 
 const ADULT_FARE = 2500;
@@ -66,7 +66,6 @@ export default function BookingScreen({ departure, destination: initialDest, onB
   const [selectedTime, setTime]      = useState(null);
   const [customTime, setCustomTime]  = useState(getDefaultCustomTime);
   const [adults, setAdults]          = useState(1);
-  const [children, setChildren]      = useState(0);
 
   const TIME_SLOTS = useMemo(() => getRelativeSlots(), []);
   const depCoords  = getCoordsForName(depName) ?? DEPARTURE_COORDS[departure];
@@ -85,7 +84,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
 
   const mapZoom = selectedStop ? 14 : 12;
 
-  const total        = ADULT_FARE * (adults + children);
+  const total        = ADULT_FARE * adults;
   const resolvedTime = selectedTime?.isCustom ? customTime : selectedTime?.time;
   const canConfirm   = selectedStop && selectedTime && (!selectedTime.isCustom || customTime);
 
@@ -110,9 +109,8 @@ export default function BookingScreen({ departure, destination: initialDest, onB
       destination: selectedStop,
       time:       resolvedTime,
       timeLabel:  selectedTime.isCustom ? resolvedTime : selectedTime.label,
-      passengers: adults + children,
+      passengers: adults,
       adults,
-      children,
       total,
     });
   };
@@ -141,7 +139,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
             onClick={handleSwap}
             disabled={!selectedStop}
           >
-            ↕
+            <Icon name="swapVert" size={18} color="#35C8B4" />
           </button>
         </div>
 
@@ -259,14 +257,6 @@ export default function BookingScreen({ departure, destination: initialDest, onB
           </div>
         </div>
 
-        <div className="pax-row">
-          <span className="pax-type">어린이</span>
-          <div className="pax-ctrl">
-            <button className="pax-minus" onClick={() => setChildren((c) => Math.max(0, c - 1))} disabled={children <= 0}>−</button>
-            <span className="pax-count">{children}</span>
-            <button className="pax-plus" onClick={() => setChildren((c) => Math.min(8, c + 1))}>+</button>
-          </div>
-        </div>
       </div>
 
       {/* 요금 안내 */}

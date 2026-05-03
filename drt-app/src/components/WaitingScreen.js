@@ -5,6 +5,13 @@ import 'leaflet/dist/leaflet.css';
 import { DEPARTURE_COORDS, YEONGJU_STOPS } from '../data/yeongju';
 import { makeMarkerHtml } from './Icon';
 
+function ro(word) {
+  const code = word.charCodeAt(word.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return '으로';
+  const jong = (code - 0xAC00) % 28;
+  return jong === 0 || jong === 8 ? '로' : '으로';
+}
+
 function getCoords(name) {
   if (DEPARTURE_COORDS[name]) return DEPARTURE_COORDS[name];
   const stop = YEONGJU_STOPS.find((s) => s.name === name);
@@ -103,7 +110,7 @@ export default function WaitingScreen({ bookingInfo, onBack }) {
         <p className="arrival-sub">
           {arrived
             ? '차량이 도착했습니다. 탑승해 주세요!'
-            : `차량이 ${departure}으로 이동 중입니다`}
+            : `차량이 ${departure}${ro(departure)} 이동 중입니다`}
         </p>
         <div className="dots-anim">
           <span className="dot" />

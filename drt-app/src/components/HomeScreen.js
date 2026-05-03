@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from './Icon';
 import './HomeScreen.css';
 
+// 받침 유무에 따라 '으로' / '로' 반환
+function ro(word) {
+  const code = word.charCodeAt(word.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return '으로';
+  const jong = (code - 0xAC00) % 28;
+  return jong === 0 || jong === 8 ? '로' : '으로';
+}
+
 const DESTINATIONS = {
   영주역: [
     { id: 'sosu',   name: '소수서원', desc: '조선시대 선비 문화의 보고',          distance: '12.5km', duration: '약 25분', thumbColor: '#c9a06a', thumbColor2: '#a07840' },
@@ -91,7 +99,7 @@ export default function HomeScreen({ departure, setDeparture, onSelectDest }) {
           onClick={handleCallDRT}
           disabled={!selected}
         >
-          {selected ? `${selected.name}으로 DRT 호출하기` : 'DRT 호출하기'}
+          {selected ? `${selected.name}${ro(selected.name)} DRT 호출하기` : 'DRT 호출하기'}
         </button>
       </div>
 
