@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Icon } from './Icon';
+import DuruLogo from './DuruLogo';
 import { useLang } from '../contexts/LanguageContext';
 import { fetchAllSpots } from '../services/tourApi';
 import { LANG_OPTIONS } from '../i18n/translations';
@@ -91,8 +92,7 @@ export default function HomeScreen({ departure, setDeparture, onSelectDest }) {
         </div>
 
         <div className="header-top">
-          <span className="header-bus"><Icon name="bus" size={22} color="#fff" /></span>
-          <h1 className="header-title">{t.appName}</h1>
+          <DuruLogo height={40} />
         </div>
         <p className="header-sub">{t.tagline}</p>
 

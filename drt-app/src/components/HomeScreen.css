@@ -78,17 +78,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.header-bus  { font-size: 22px; }
-
-.header-title {
-  font-size: 24px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 
 .header-sub {

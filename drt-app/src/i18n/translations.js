@@ -8,8 +8,8 @@ function ro(word) {
 
 export const TRANSLATIONS = {
   ko: {
-    appName:  '영주 관광버스',
-    tagline:  '역에서 관광지까지, 편하게',
+    appName:  '두루온',
+    tagline:  '영주를 두루두루, 두루온',
     departure:   '출발',
     destination: '목적지',
     callDRT:     'DRT 호출하기',
@@ -53,8 +53,8 @@ export const TRANSLATIONS = {
   },
 
   en: {
-    appName:  'Yeongju Tour Bus',
-    tagline:  'From the station to attractions, comfortably',
+    appName:  'Duruon',
+    tagline:  'All around Yeongju, with Duruon',
     departure:   'Departure',
     destination: 'Destination',
     callDRT:     'Call DRT',
@@ -98,8 +98,8 @@ export const TRANSLATIONS = {
   },
 
   ja: {
-    appName:  '栄州観光バス',
-    tagline:  '駅から観光地まで、快適に',
+    appName:  '두루온',
+    tagline:  '栄州をくまなく、두루온で',
     departure:   '出発',
     destination: '目的地',
     callDRT:     'DRTを呼ぶ',
@@ -143,8 +143,8 @@ export const TRANSLATIONS = {
   },
 
   zh: {
-    appName:  '荣州观光巴士',
-    tagline:  '从车站到景点，轻松出行',
+    appName:  '두루온',
+    tagline:  '遍游荣州，乘坐두루온',
     departure:   '出发地',
     destination: '目的地',
     callDRT:     '呼叫 DRT',

@@ -5,8 +5,24 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
+/* ── 언어별 폰트 ── */
+:root,
+[data-lang="ko"] {
   font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-lang="en"] {
+  font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+}
+[data-lang="ja"] {
+  font-family: "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3",
+               "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+[data-lang="zh"] {
+  font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif;
+}
+
+body {
+  font-family: inherit;
   background: #b8ecd8;
   min-height: 100vh;
   display: flex;

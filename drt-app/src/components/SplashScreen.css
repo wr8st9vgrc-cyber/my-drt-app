@@ -1,0 +1,20 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  /* 앱 컨테이너 너비에 맞춤 */
+  max-width: 390px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #35C8B4 0%, #A4CF4A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  /* 0.7s 유지 후 0.3s 페이드 아웃 */
+  animation: splashFadeOut 0.3s ease 0.7s forwards;
+}
+
+@keyframes splashFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; pointer-events: none; }
+}

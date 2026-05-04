@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './contexts/LanguageContext';
 import HomeScreen    from './components/HomeScreen';
 import BookingScreen from './components/BookingScreen';
 import WaitingScreen from './components/WaitingScreen';
 import ReviewScreen  from './components/ReviewScreen';
+import SplashScreen  from './components/SplashScreen';
 import PopupAd       from './components/PopupAd';
 
 export default function App() {
@@ -13,6 +14,13 @@ export default function App() {
   const [bookingInfo, setBookingInfo]   = useState(null);
   const [navKey, setNavKey]             = useState(0);
   const [showAd, setShowAd]             = useState(true);
+  const [showSplash, setShowSplash]     = useState(true);
+
+  // 0.7s 표시 + 0.3s 페이드 = 1s 후 언마운트
+  useEffect(() => {
+    const t = setTimeout(() => setShowSplash(false), 1000);
+    return () => clearTimeout(t);
+  }, []);
 
   const navigate = (newScreen) => {
     setNavKey((k) => k + 1);
@@ -64,6 +72,9 @@ export default function App() {
       {showAd && screen === 'home' && (
         <PopupAd onClose={() => setShowAd(false)} />
       )}
+
+      {/* 스플래시 화면 — 최상단 오버레이 */}
+      {showSplash && <SplashScreen />}
     </LanguageProvider>
   );
 }
