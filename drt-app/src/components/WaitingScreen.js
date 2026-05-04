@@ -161,6 +161,13 @@ export default function WaitingScreen({ bookingInfo, onBack, onArrived }) {
       <div className="cancel-wrap">
         <button className="cancel-btn" onClick={onBack}>{t.cancelBtn}</button>
       </div>
+
+      {/* MVP 전용: 리뷰 화면 바로가기 */}
+      <div className="mvp-skip-wrap">
+        <button className="mvp-skip-btn" onClick={onArrived}>
+          리뷰 화면으로 →
+        </button>
+      </div>
     </div>
   );
 }

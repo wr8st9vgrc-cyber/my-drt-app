@@ -171,3 +171,23 @@
   background: #f5fcfa;
   border-color: #c0dcd8;
 }
+
+/* ── MVP 전용: 리뷰 바로가기 ── */
+.mvp-skip-wrap {
+  padding: 10px 16px 0;
+  text-align: center;
+}
+
+.mvp-skip-btn {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: #b0ccc8;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 6px 12px;
+}
+
+.mvp-skip-btn:active { color: #35C8B4; }
