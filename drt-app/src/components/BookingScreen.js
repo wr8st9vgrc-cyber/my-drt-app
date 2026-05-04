@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { YEONGJU_STOPS, DEPARTURE_COORDS } from '../data/yeongju';
 import { makeMarkerHtml, Icon } from './Icon';
+import { useLang } from '../contexts/LanguageContext';
 import './BookingScreen.css';
 
 const ADULT_FARE = 2500;
@@ -39,35 +40,38 @@ function MapFlyTo({ center, zoom }) {
   return null;
 }
 
-function getRelativeSlots() {
+function getRelativeSlots(t) {
   const now = new Date();
   return [5, 10, 15].map((mins) => {
-    const t = new Date(now.getTime() + mins * 60000);
-    const h = t.getHours().toString().padStart(2, '0');
-    const m = t.getMinutes().toString().padStart(2, '0');
-    return { id: `${mins}`, label: `${mins}분 후`, time: `${h}:${m}`, isCustom: false };
-  }).concat([{ id: 'custom', label: '20분 이후', time: null, isCustom: true }]);
+    const d = new Date(now.getTime() + mins * 60000);
+    const h = d.getHours().toString().padStart(2, '0');
+    const m = d.getMinutes().toString().padStart(2, '0');
+    return { id: `${mins}`, label: t.timeSlots[mins], time: `${h}:${m}`, isCustom: false };
+  }).concat([{ id: 'custom', label: t.timeSlots.custom, time: null, isCustom: true }]);
 }
 
 function getDefaultCustomTime() {
-  const t = new Date(Date.now() + 30 * 60000);
-  return `${t.getHours().toString().padStart(2, '0')}:${t.getMinutes().toString().padStart(2, '0')}`;
+  const d = new Date(Date.now() + 30 * 60000);
+  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
 }
 
 export default function BookingScreen({ departure, destination: initialDest, onBack, onConfirm }) {
+  const { t } = useLang();
+
   const initialStop = initialDest
     ? YEONGJU_STOPS.find((s) => s.id === initialDest.id) ?? null
     : null;
 
-  const [depName, setDepName]        = useState(departure);
-  const [query, setQuery]            = useState(initialDest?.name ?? '');
-  const [selectedStop, setStop]      = useState(initialStop);
-  const [showDropdown, setDropdown]  = useState(false);
-  const [selectedTime, setTime]      = useState(null);
-  const [customTime, setCustomTime]  = useState(getDefaultCustomTime);
-  const [adults, setAdults]          = useState(1);
+  const [depName, setDepName]       = useState(departure);
+  const [query, setQuery]           = useState(initialDest?.name ?? '');
+  const [selectedStop, setStop]     = useState(initialStop);
+  const [showDropdown, setDropdown] = useState(false);
+  const [selectedTime, setTime]     = useState(null);
+  const [customTime, setCustomTime] = useState(getDefaultCustomTime);
+  const [adults, setAdults]         = useState(1);
 
-  const TIME_SLOTS = useMemo(() => getRelativeSlots(), []);
+  // 언어 바뀌면 시간 슬롯 라벨 재생성
+  const TIME_SLOTS = useMemo(() => getRelativeSlots(t), [t]);
   const depCoords  = getCoordsForName(depName) ?? DEPARTURE_COORDS[departure];
 
   const filtered = useMemo(() => {
@@ -78,21 +82,13 @@ export default function BookingScreen({ departure, destination: initialDest, onB
     );
   }, [query]);
 
-  const mapCenter = selectedStop
-    ? [selectedStop.lat, selectedStop.lng]
-    : [depCoords.lat, depCoords.lng];
-
-  const mapZoom = selectedStop ? 14 : 12;
-
+  const mapCenter    = selectedStop ? [selectedStop.lat, selectedStop.lng] : [depCoords.lat, depCoords.lng];
+  const mapZoom      = selectedStop ? 14 : 12;
   const total        = ADULT_FARE * adults;
   const resolvedTime = selectedTime?.isCustom ? customTime : selectedTime?.time;
   const canConfirm   = selectedStop && selectedTime && (!selectedTime.isCustom || customTime);
 
-  const handleStopSelect = (stop) => {
-    setStop(stop);
-    setQuery(stop.name);
-    setDropdown(false);
-  };
+  const handleStopSelect = (stop) => { setStop(stop); setQuery(stop.name); setDropdown(false); };
 
   const handleSwap = () => {
     if (!selectedStop) return;
@@ -105,11 +101,11 @@ export default function BookingScreen({ departure, destination: initialDest, onB
   const handleConfirm = () => {
     if (!canConfirm) return;
     onConfirm({
-      departure:  depName,
+      departure:   depName,
       destination: selectedStop,
-      time:       resolvedTime,
-      timeLabel:  selectedTime.isCustom ? resolvedTime : selectedTime.label,
-      passengers: adults,
+      time:        resolvedTime,
+      timeLabel:   selectedTime.isCustom ? resolvedTime : selectedTime.label,
+      passengers:  adults,
       adults,
       total,
     });
@@ -120,14 +116,14 @@ export default function BookingScreen({ departure, destination: initialDest, onB
       {/* 헤더 */}
       <div className="booking-header">
         <button className="back-btn" onClick={onBack}>‹</button>
-        <h2 className="booking-title">DRT 예약</h2>
+        <h2 className="booking-title">{t.bookingTitle}</h2>
         <div style={{ width: 40 }} />
       </div>
 
       {/* 출발 / 목적지 폼 */}
       <div className="route-form-card">
         <div className="route-field-group">
-          <p className="route-label">출발</p>
+          <p className="route-label">{t.departure}</p>
           <div className="route-input">
             <span className="route-input-text">{depName}</span>
           </div>
@@ -144,11 +140,11 @@ export default function BookingScreen({ departure, destination: initialDest, onB
         </div>
 
         <div className="route-field-group" onClick={(e) => e.stopPropagation()}>
-          <p className="route-label">목적지</p>
+          <p className="route-label">{t.destination}</p>
           <input
             className={`route-search-input ${selectedStop ? 'has-value' : ''}`}
             type="text"
-            placeholder="목적지 검색 (예: 소수서원)"
+            placeholder={t.destPlaceholder}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -160,7 +156,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
           {showDropdown && (
             <div className="search-dropdown">
               {filtered.length === 0 ? (
-                <p className="dropdown-empty">검색 결과가 없습니다</p>
+                <p className="dropdown-empty">{t.noResults}</p>
               ) : (
                 filtered.map((stop) => (
                   <button
@@ -195,18 +191,10 @@ export default function BookingScreen({ departure, destination: initialDest, onB
           <Marker position={[depCoords.lat, depCoords.lng]} icon={depIcon} />
           {selectedStop && (
             <>
-              <Marker
-                position={[selectedStop.lat, selectedStop.lng]}
-                icon={destIcon}
-              />
+              <Marker position={[selectedStop.lat, selectedStop.lng]} icon={destIcon} />
               <Polyline
-                positions={[
-                  [depCoords.lat, depCoords.lng],
-                  [selectedStop.lat, selectedStop.lng],
-                ]}
-                color="#35C8B4"
-                weight={3}
-                dashArray="8 5"
+                positions={[[depCoords.lat, depCoords.lng], [selectedStop.lat, selectedStop.lng]]}
+                color="#35C8B4" weight={3} dashArray="8 5"
               />
             </>
           )}
@@ -215,7 +203,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
 
       {/* 탑승 시간 */}
       <div className="booking-card">
-        <p className="booking-label">탑승 시간</p>
+        <p className="booking-label">{t.boardingTime}</p>
         <div className="time-row">
           {TIME_SLOTS.map((slot) => (
             <button
@@ -231,7 +219,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
 
         {selectedTime?.isCustom && (
           <div className="custom-time-row">
-            <span className="custom-time-label">시간 직접 설정</span>
+            <span className="custom-time-label">{t.timeCustomLabel}</span>
             <input
               type="time"
               className="custom-time-input"
@@ -241,29 +229,27 @@ export default function BookingScreen({ departure, destination: initialDest, onB
           </div>
         )}
 
-        <p className="time-note">KTX 도착 후 약 10분 내 배차</p>
+        <p className="time-note">{t.timeNote}</p>
       </div>
 
       {/* 인원 선택 */}
       <div className="booking-card">
-        <p className="booking-label">인원 선택</p>
-
+        <p className="booking-label">{t.paxSelect}</p>
         <div className="pax-row">
-          <span className="pax-type">어른</span>
+          <span className="pax-type">{t.adult}</span>
           <div className="pax-ctrl">
             <button className="pax-minus" onClick={() => setAdults((a) => Math.max(1, a - 1))} disabled={adults <= 1}>−</button>
             <span className="pax-count">{adults}</span>
             <button className="pax-plus" onClick={() => setAdults((a) => Math.min(8, a + 1))}>+</button>
           </div>
         </div>
-
       </div>
 
       {/* 요금 안내 */}
       <div className="fare-info">
-        <span className="fare-unit">1인 {ADULT_FARE.toLocaleString()}원</span>
+        <span className="fare-unit">{t.fareInfo(ADULT_FARE.toLocaleString())}</span>
         <span className="fare-divider">·</span>
-        <span className="fare-total">총 <strong>{total.toLocaleString()}원</strong></span>
+        <span className="fare-total"><strong>{t.fareTotal(total.toLocaleString())}</strong></span>
       </div>
 
       {/* 예약 확정 버튼 */}
@@ -273,7 +259,7 @@ export default function BookingScreen({ departure, destination: initialDest, onB
           onClick={handleConfirm}
           disabled={!canConfirm}
         >
-          예약 확정하기
+          {t.confirmBtn}
         </button>
       </div>
     </div>
